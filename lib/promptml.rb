@@ -19,6 +19,7 @@ def bullet_point_args env
 EOS
 end
 
+
 class HappyWrapper
   def initialize method
     @method = method
