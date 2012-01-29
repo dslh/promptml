@@ -28,7 +28,7 @@ class CommandDispatch
 
     begin
       return command_successful @cmds[cmd].call(args)
-    rescue e
+    rescue => e
       return command_failed cmd, e
     end
   end
@@ -41,7 +41,6 @@ class CommandDispatch
     ]
   end
   
-  private
   def command_failed command, error
     [500,
       @headers,
@@ -49,7 +48,6 @@ class CommandDispatch
     ]
   end
   
-  private
   def command_successful output
     [200,
       @headers.merge({ "Content-Length" => output.length.to_s}),
@@ -57,7 +55,6 @@ class CommandDispatch
     ]
   end
 
-  private
   def parse_args env
     env['QUERY_STRING'].split('+').collect { |a| URI.unescape(a) }
   end
