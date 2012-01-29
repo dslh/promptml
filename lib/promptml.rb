@@ -1,37 +1,28 @@
 require 'rubygems'
 require 'rack'
+require 'rack/contrib'
 require 'uri'
 
-def parse_args env
-  env['QUERY_STRING'].split('+').collect { |a| URI.unescape(a) }
-end
+require "#{File.dirname __FILE__}/command_dispatch.rb"
+require "#{File.dirname __FILE__}/trollop_action.rb"
 
-def bullet_point_args env
-  <<-EOS
-<ul>
-  <li>
-    #{parse_args(env).join("
-  </li>
-  <li>
-    ")}
-  </li>
-</ul>
-EOS
-end
+dispatch = CommandDispatch.new({
+  'trollop' => TrollopAction.new do
+    opt :flag, 'A flag'
+    opt :value, 'A value', :default => 10
+  end
+  })
 
+builder = Rack::Builder.new do
+  use Rack::CommonLogger
 
-class HappyWrapper
-  def initialize method
-    @method = method
+  map '/client' do
+    run Rack::File.new 'client'
   end
 
-  def call env
-    [
-      200,
-      {"Content-Type" => "text/html"},
-      @method.call(env)
-    ]
+  map '/cmd' do
+    run dispatch
   end
 end
 
-Rack::Handler::Thin.run HappyWrapper.new(method(:bullet_point_args))
+Rack::Handler::WEBrick.run builder
