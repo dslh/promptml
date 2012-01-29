@@ -4,6 +4,7 @@
 # real actions.
 
 require 'trollop'
+require 'cgi'
 
 class TrollopAction
   def initialize &b
@@ -15,7 +16,7 @@ class TrollopAction
       opts = @parser.parse args
       return action opts, args
     rescue Trollop::HelpNeeded
-      return help_message
+      return pre_wrap help_message
     rescue Trollop::VersionNeeded
       return version_message
     rescue Trollop::CommandlineError => e
@@ -27,21 +28,26 @@ class TrollopAction
   # opts - the options hash as returned by trollop
   # args - remaining arguments not parsed by trollop
   def action opts, args
-    <<-EOS
-<pre>
+    pre_wrap <<-EOS
 Trollop diagnostics
 #{help_message}
-#{@parser.specs.keys.sort.collect { |k| "--#{k}=#{opts[k]}" }.join('\n') }
+#{@parser.specs.keys.sort.collect { |k| "--#{k}=#{opts[k]}" }.join("\n") }
 Remaining args: #{args.join(', ')}
-</pre>
 EOS
   end
 
   private
+  # Format the given string by escaping any
+  # sensitive html characters and wrapping
+  # it in &lt;pre&gt; tags.
+  def pre_wrap str
+    "<pre>#{CGI.escapeHTML(str)}</pre>"
+  end
+
   def help_message
     usage = StringIO.new
     @parser.educate usage
-    "<pre>#{usage.string}</pre>"
+    usage.string
   end
   
   def version_message
