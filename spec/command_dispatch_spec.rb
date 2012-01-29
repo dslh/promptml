@@ -33,7 +33,7 @@ describe CommandDispatch do
     response[0].should be >= 200
     response[0].should be < 300
     response[1].should be_an_instance_of Hash
-    response[2].should be == "test,one,two,three,1 2+3"
+    response[2].should be == ["test,one,two,three,1 2+3"]
   end
 
   it "should provide the Content-Length header" do
@@ -47,7 +47,7 @@ describe CommandDispatch do
     @command_dispatch['fail']= Proc.new { |args| raise error_message }
     response = @command_dispatch.call({'QUERY_STRING' => 'fail'})
     response[0].should == 500
-    response[2].should match error_message
+    response[2][0].should match error_message
   end
 
   it "should allow custom headers" do

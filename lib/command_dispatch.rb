@@ -3,8 +3,8 @@ require 'uri'
 class CommandDispatch
   attr_accessor :headers
 
-  def initialize
-    @cmds = {}
+  def initialize cmds = {}
+    @cmds = cmds
     @headers = { "Content-Type" => "text/html" }
   end
 
@@ -37,21 +37,21 @@ class CommandDispatch
   def not_found command
     [404,
       @headers,
-      "<span class='error'>Command '#{command}' not found.</span>"
+      ["<span class='error'>Command '#{command}' not found.</span>"]
     ]
   end
   
   def command_failed command, error
     [500,
       @headers,
-      "<span class='error'>Command '#{command}' failed: #{error}</span>"
+      ["<span class='error'>Command '#{command}' failed: #{error}</span>"]
     ]
   end
   
   def command_successful output
     [200,
       @headers.merge({ "Content-Length" => output.length.to_s}),
-      output
+      [output]
     ]
   end
 
