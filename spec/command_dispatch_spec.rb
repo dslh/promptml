@@ -42,6 +42,14 @@ describe CommandDispatch do
     response[1].should include('Content-Length' => '24')
   end
 
+  it "should handle errors" do
+    error_message = "this should be in the response"
+    @command_dispatch['fail']= Proc.new { |args| raise error_message }
+    response = @command_dispatch.call({'QUERY_STRING' => 'fail'})
+    response[0].should == 500
+    response[2].should match error_message
+  end
+
   it "should allow custom headers" do
     @command_dispatch['test']= @command
     @command_dispatch.headers['Server']= 'promptml'
