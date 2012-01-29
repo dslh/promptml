@@ -21,6 +21,12 @@ describe CommandDispatch do
     expect { @command_dispatch['test'] = action }.to raise_error
   end
 
+  it "should pass an args array to the dispatched action" do
+    @command_dispatch['test'] = Proc.new do |args|
+      args.should be_an_instance_of Array
+    end
+  end
+
   it "should wrap the output of the action in a rackable http response" do
     @command_dispatch['test']= @command
     response = @command_dispatch.call @env
