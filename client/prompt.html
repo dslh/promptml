@@ -8,11 +8,10 @@
     <ul id='output'></ul>
   </div>
   <form id='prompt' name='prompt'
-        method='GET' action='/cmd'
-        onsubmit='return q.value!=""'>
+        method='GET' action='/cmd'>
     <input value size='41' type='text'
           id='input' name='cmd' spellcheck='false' />
-    <input value='go' name='go' type='submit' />
+    <input id='go' value='go' name='go' type='submit' />
   </form>
   <script type='text/javascript' src='prompt.js'></script>
 </body>
