@@ -1,5 +1,15 @@
+// A history of commands sent to the server,
+// oldest first.
 var history = [''];
 var history_position = 0;
+
+// True if there is an ajax request en route
+// to the server. The prompt only allows one
+// request at a time.
+var working = false;
+
+// Debugging variable, remove at some point maybe
+var last_request = null;
 
 // Add an executed command onto the history stack
 function updateHistory(cmd) {
@@ -44,6 +54,8 @@ $('#input').keydown(function(event) {
 // the form is submitted.
 $('#prompt').submit(function(event) {
   event.preventDefault();
+  if (working)
+    return;
 
   var input = $('#input');
   var cmd = $.trim(input.val());
@@ -51,14 +63,37 @@ $('#prompt').submit(function(event) {
 
   updateHistory(cmd);
 
-  $.get('/cmd?' + escapeCommand(cmd), function (response) {
-    input.val('');
-    $('#output').append(
-            '<li><div class="command">' + cmd + '</div>' +
-            '<div class="response">' + response + '</div></li>');
+  working = true;
+  $.ajax({
+    type: 'GET', url: '/cmd?' + escapeCommand(cmd),
+    dataType: 'html',
+    success: function (response) {
+      appendResult(cmd, response);
+    },
+    error: function (request, message, exception) {
+      appendResult(cmd,
+        '<strong>HTTP ' + request.status
+        + ' ' + request.statusText + '</strong>'
+        + ' ' + request.responseText);
+    },
+    complete: function (request, message) {
+      input.val('');
+      working = false;
+      last_request = request;
+    }
   });
 });
 
+// Add the user's command and the response
+// returned from the server to the output list
+function appendResult(command,response) {
+  $('#output').append(
+        '<li><div class="command">' + command + '</div>' +
+        '<div class="response">' + response + '</div></li>'
+  );
+}
+
+// URI encode the user's command
 function escapeCommand(cmd) {
   return escape(cmd.replace(/ /g,'+'));
 }
@@ -71,4 +106,5 @@ function setOutputSize() {
       + 'px');
 }
 $(setOutputSize);
+$(function() { $('#input').focus() });
 $(window).resize(setOutputSize);
