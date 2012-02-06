@@ -35,22 +35,20 @@ class CommandDispatch
 
   private
   def not_found command
-    [404,
-      @headers,
-      ["<span class='error'>Command '#{command}' not found.</span>"]
-    ]
+    response "<span class='notfound'>Command '#{command}' not found.</span>"
   end
   
   def command_failed command, error
-    [500,
-      @headers,
-      ["<span class='error'>Command '#{command}' failed: #{error}</span>"]
-    ]
+    response "<span class='error'>Command '#{command}' failed: #{error}</span>"
   end
   
   def command_successful output
+    response output
+  end
+
+  def response output
     [200,
-      @headers.merge({ "Content-Length" => output.length.to_s}),
+      @headers.merge({ "Content-Length" => output.length.to_s }),
       [output]
     ]
   end

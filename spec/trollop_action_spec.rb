@@ -28,7 +28,7 @@ describe TrollopAction do
 
   it "hands back an error message if there are bad arguments" do
     response = @dispatch.call({'QUERY_STRING' => 'trollop+--badarg'})
-    response[0].should >= 500
+    response[0].should == 200
     response[2][0].should match 'badarg'
   end
 

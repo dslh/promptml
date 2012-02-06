@@ -30,8 +30,7 @@ describe CommandDispatch do
   it "should wrap the output of the action in a rackable http response" do
     @command_dispatch['test']= @command
     response = @command_dispatch.call @env
-    response[0].should be >= 200
-    response[0].should be < 300
+    response[0].should == 200
     response[1].should be_an_instance_of Hash
     response[2].should be == ["test,one,two,three,1 2+3"]
   end
@@ -46,7 +45,7 @@ describe CommandDispatch do
     error_message = "this should be in the response"
     @command_dispatch['fail']= Proc.new { |args| raise error_message }
     response = @command_dispatch.call({'QUERY_STRING' => 'fail'})
-    response[0].should == 500
+    response[0].should == 200
     response[2][0].should match error_message
   end
 
@@ -59,8 +58,10 @@ describe CommandDispatch do
     response[1].should include('Refresh' => 5)
   end
 
-  it "should 404 when the command is not found" do
-    @command_dispatch.call(@env)[0].should == 404
+  it "should notify the user when the command is not found" do
+    response = @command_dispatch.call(@env)
+    response[0].should == 200
+    response[2][0].should match 'not found'
   end
 end
 
