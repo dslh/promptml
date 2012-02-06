@@ -62,3 +62,13 @@ $('#prompt').submit(function(event) {
 function escapeCommand(cmd) {
   return escape(cmd.replace(/ /g,'+'));
 }
+
+// Style-related. Ensure the output window fills the browser,
+// save for a space at the bottom for the prompt.
+function setOutputSize() {
+  $('#output_scroll').css('height',
+    ($('body').innerHeight() - $('#prompt').outerHeight())
+      + 'px');
+}
+$(setOutputSize);
+$(window).resize(setOutputSize);
