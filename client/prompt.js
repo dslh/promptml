@@ -64,6 +64,7 @@ $('#prompt').submit(function(event) {
   updateHistory(cmd);
 
   working = true;
+  $('#go').html('<img src="images/loading.gif"/>');
   $.ajax({
     type: 'GET', url: '/cmd?' + escapeCommand(cmd),
     dataType: 'html',
@@ -71,7 +72,8 @@ $('#prompt').submit(function(event) {
       appendResult(cmd, response);
     },
     error: function (request, message, exception) {
-      appendResult(cmd,
+      appendResult(
+        '<span class="failed">' + cmd + '</span>',
         '<strong>HTTP ' + request.status
         + ' ' + request.statusText + '</strong>'
         + ' ' + request.responseText);
@@ -79,6 +81,7 @@ $('#prompt').submit(function(event) {
     complete: function (request, message) {
       input.val('');
       working = false;
+      $('#go').text('go');
       last_request = request;
     }
   });
