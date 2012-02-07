@@ -12,7 +12,8 @@ dispatch = CommandDispatch.new({
     opt :flag, 'A flag'
     opt :value, 'A value', :default => 10
   end,
-  'sleep' => Sleep.new
+  'sleep' => Sleep.new,
+  'inspect_env' => Proc.new { |env,args| env.inspect }
   })
 
 builder = Rack::Builder.new do
