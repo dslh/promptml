@@ -6,6 +6,7 @@ require 'cgi'
 require "#{File.dirname __FILE__}/command_dispatch.rb"
 require "#{File.dirname __FILE__}/trollop_action.rb"
 require "#{File.dirname __FILE__}/sleep.rb"
+require "#{File.dirname __FILE__}/set_cwd.rb"
 
 dispatch = CommandDispatch.new({
   'trollop' => TrollopAction.new do
@@ -20,11 +21,11 @@ builder = Rack::Builder.new do
   use Rack::CommonLogger
 
   map '/client' do
-    run Rack::File.new 'client'
+    run SetCwd.new(Rack::File.new('client'))
   end
 
   map '/cmd' do
-    run Rack::Cookies.new(dispatch)
+    run dispatch
   end
 end
 
