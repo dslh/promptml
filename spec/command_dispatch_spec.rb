@@ -6,7 +6,7 @@ require 'command_dispatch'
 describe CommandDispatch do
   before(:each) do
     @command_dispatch = CommandDispatch.new
-    @command = Proc.new { |args| args.join(',') }
+    @command = Proc.new { |env,args| args.join(',') }
     @env = { 'QUERY_STRING' => 'test+one+two+three+1%202%2B3' }
   end
 
@@ -21,10 +21,12 @@ describe CommandDispatch do
     expect { @command_dispatch['test'] = action }.to raise_error
   end
 
-  it "should pass an args array to the dispatched action" do
-    @command_dispatch['test'] = Proc.new do |args|
+  it "should pass env and an args array to the dispatched action" do
+    @command_dispatch['test'] = Proc.new do |env,args|
+      env.should equal @env
       args.should be_an_instance_of Array
     end
+    @command_dispatch.call @env
   end
 
   it "should wrap the output of the action in a rackable http response" do
@@ -43,7 +45,7 @@ describe CommandDispatch do
 
   it "should handle errors" do
     error_message = "this should be in the response"
-    @command_dispatch['fail']= Proc.new { |args| raise error_message }
+    @command_dispatch['fail']= Proc.new { |env,args| raise error_message }
     response = @command_dispatch.call({'QUERY_STRING' => 'fail'})
     response[0].should == 200
     response[2][0].should match error_message
@@ -62,6 +64,15 @@ describe CommandDispatch do
     response = @command_dispatch.call(@env)
     response[0].should == 200
     response[2][0].should match 'not found'
+  end
+
+  it "returns any response given as a string" do
+    @command_dispatch['number'] = Proc.new { |env,args| 10 }
+    @command_dispatch['array'] = Proc.new { |e,a| [1,2,3] }
+    response = @command_dispatch.call({'QUERY_STRING' => 'number'})
+    response[2][0].should == '10'
+    response = @command_dispatch.call({'QUERY_STRING' => 'array'})
+    response[2][0].should == '[1, 2, 3]'
   end
 end
 

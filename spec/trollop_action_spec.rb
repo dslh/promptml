@@ -41,7 +41,10 @@ describe TrollopAction do
         end
       end
 
-      def action opts, args
+      def action env, cmd, opts, args
+        env['QUERY_STRING'].should == 'sub+--option'
+        cmd.should == 'sub'
+        args.empty?.should == true
         if opts[:option]
           "on"
         else
@@ -53,6 +56,24 @@ describe TrollopAction do
     response = @dispatch.call({'QUERY_STRING' => 'sub+--option'})
     response[0].should == 200
     response[2][0].should match 'on'
+  end
+
+  it "provides a convenience for raising command-line errors" do
+    class TestTrollopFailConvenience < TrollopAction
+      def initialize
+        super do
+          banner 'hi!'
+        end
+      end
+
+      def action env, cmd, opts, args
+        cl_error "foobar"
+      end
+    end
+    @dispatch['clfail'] = TestTrollopFailConvenience.new
+    response = @dispatch.call({'QUERY_STRING' => 'clfail'})
+    response[2][0].should match 'foobar'
+    response[2][0].should match 'Try --help'
   end
 end
 

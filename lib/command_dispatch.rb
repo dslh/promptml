@@ -27,7 +27,7 @@ class CommandDispatch
     return not_found cmd unless @cmds.key? cmd
 
     begin
-      return command_successful @cmds[cmd].call(args)
+      return command_successful @cmds[cmd].call(env,args)
     rescue => e
       return command_failed cmd, e
     end
@@ -47,6 +47,7 @@ class CommandDispatch
   end
 
   def response output
+    output = output.to_s
     [200,
       @headers.merge({ "Content-Length" => output.length.to_s }),
       [output]

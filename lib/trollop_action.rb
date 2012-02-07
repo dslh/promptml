@@ -11,23 +11,24 @@ class TrollopAction
     @parser = Trollop::Parser.new &b
   end
 
-  def call args
+  def call env, args
     begin
+      cmd = args.shift
       opts = @parser.parse args
-      return action opts, args
+      return action env, cmd, opts, args
     rescue Trollop::HelpNeeded
       return pre_wrap help_message
     rescue Trollop::VersionNeeded
       return version_message
     rescue Trollop::CommandlineError => e
-      raise "Error: #{e.message}.<br />Try --help for help."
+      raise "#{e.message}.<br />Try --help for help."
     end
   end
 
   # Override this method to create your own trollop action
   # opts - the options hash as returned by trollop
   # args - remaining arguments not parsed by trollop
-  def action opts, args
+  def action env, cmd, opts, args
     pre_wrap <<-EOS
 Trollop diagnostics
 #{help_message}
@@ -55,6 +56,6 @@ EOS
   end
 
   def cl_error msg
-    raise CommandlineError, msg
+    raise Trollop::CommandlineError, msg
   end
 end
