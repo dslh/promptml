@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'rack'
 require 'rack/contrib'
-require 'uri'
+require 'cgi'
 
 require "#{File.dirname __FILE__}/command_dispatch.rb"
 require "#{File.dirname __FILE__}/trollop_action.rb"
@@ -13,7 +13,7 @@ dispatch = CommandDispatch.new({
     opt :value, 'A value', :default => 10
   end,
   'sleep' => Sleep.new,
-  'inspect_env' => Proc.new { |env,args| env.inspect }
+  'inspect_env' => Proc.new { |env,args| CGI.escapeHTML env.inspect }
   })
 
 builder = Rack::Builder.new do
@@ -24,7 +24,7 @@ builder = Rack::Builder.new do
   end
 
   map '/cmd' do
-    run dispatch
+    run Rack::Cookies.new(dispatch)
   end
 end
 
