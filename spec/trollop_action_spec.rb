@@ -1,10 +1,10 @@
-require 'trollop_action'
-require 'command_dispatch'
+require 'promptml/trollop_action'
+require 'promptml/dispatch'
 
-describe TrollopAction do
+describe PrompTML::TrollopAction do
   before(:each) do
-    @dispatch = CommandDispatch.new
-    @trollop = TrollopAction.new do
+    @dispatch = PrompTML::Dispatch.new
+    @trollop = PrompTML::TrollopAction.new do
       banner "usage message"
 
       opt :flag, "An option"
@@ -33,7 +33,7 @@ describe TrollopAction do
   end
 
   it "can be subclassed to create new commands" do
-    class TestTrollopSubclass < TrollopAction
+    class TestTrollopSubclass < PrompTML::TrollopAction
       def initialize
         super do
           banner 'Testing TrollopAction subclassing'
@@ -59,7 +59,7 @@ describe TrollopAction do
   end
 
   it "provides a convenience for raising command-line errors" do
-    class TestTrollopFailConvenience < TrollopAction
+    class TestTrollopFailConvenience < PrompTML::TrollopAction
       def initialize
         super do
           banner 'hi!'
