@@ -90,10 +90,17 @@ $('#prompt').submit(function(event) {
 // Add the user's command and the response
 // returned from the server to the output list
 function appendResult(command,response) {
-  $('#output').append(
+  var output = $('#output');
+  var scroll = $('#output_scroll');
+  output.append(
         '<li><div class="command">' + command + '</div>' +
         '<div class="response">' + response + '</div></li>'
   );
+  if (output.outerHeight() > scroll.innerHeight()) {
+    scroll.animate({ scrollTop:
+      (output.outerHeight() - scroll.innerHeight() + 32) },
+      750);
+  }
 }
 
 // URI encode the user's command
