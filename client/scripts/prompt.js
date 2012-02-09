@@ -133,5 +133,5 @@ function displayCwd() {
   }
 }
 $(displayCwd);
-$.ajaxComplete(displayCwd);
+$('#cwd').ajaxComplete(displayCwd);
 
