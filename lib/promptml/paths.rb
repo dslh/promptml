@@ -57,6 +57,7 @@ module PrompTML
       end
 
       def real_path path
+        raise "Paths.root is not set" unless @root
         path = make_absolute path unless absolute? path
         @root + path
       end
