@@ -1,4 +1,5 @@
 require 'stringio'
+require "#{File.dirname __FILE__}/paths.rb"
 
 module PrompTML
 
@@ -9,9 +10,12 @@ module PrompTML
     def call env, args
       args.shift
       output = StringIO.new
+      cwd = env['rack.cookies']['CWD']
+
       args.each do |pattern|
-        Dir["client/#{pattern}"].each do |file|
-          output << "<img src='#{file[7..-1]}' title='#{file}'/>"
+        pattern = Paths.make_absolute pattern, cwd
+        Paths[pattern].each do |file|
+          output << "<img src='/client#{file}' title='#{file}'/>"
         end
       end
 

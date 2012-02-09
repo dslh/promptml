@@ -4,12 +4,14 @@ require 'rack/contrib'
 require 'cgi'
 
 LIB_DIR = "#{File.dirname __FILE__}/promptml"
-require "#{LIB_DIR}/set_cwd.rb"
+require "#{LIB_DIR}/change_directory.rb"
 require "#{LIB_DIR}/dispatch.rb"
-require "#{LIB_DIR}/trollop_action.rb"
-require "#{LIB_DIR}/sleep.rb"
+require "#{LIB_DIR}/set_cwd.rb"
 require "#{LIB_DIR}/show.rb"
+require "#{LIB_DIR}/sleep.rb"
+require "#{LIB_DIR}/trollop_action.rb"
 
+PrompTML::Paths.root = 'client'
 dispatch = PrompTML::Dispatch.new({
   'trollop' => PrompTML::TrollopAction.new do
     opt :flag, 'A flag'
@@ -17,7 +19,8 @@ dispatch = PrompTML::Dispatch.new({
   end,
   'sleep' => PrompTML::Sleep.new,
   'inspect_env' => Proc.new { |env,args| CGI.escapeHTML env.inspect },
-  'show' => PrompTML::Show.new
+  'show' => PrompTML::Show.new,
+  'cd' => PrompTML::ChangeDirectory.new
   })
 
 builder = Rack::Builder.new do
@@ -28,7 +31,7 @@ builder = Rack::Builder.new do
   end
 
   map '/cmd' do
-    run dispatch
+    run Rack::Cookies.new(dispatch)
   end
 end
 
