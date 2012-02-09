@@ -18,6 +18,13 @@ body {
   padding: 0;
   margin: 0;
 }
+#cwd {
+  position: absolute;
+  height: 30px;
+  font-family: inconsolata, courier, monospace;
+  font-size: 12px;
+  margin: 9px 5px;
+}
 #input {
   height: 30px;
   width: 90%;

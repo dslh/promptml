@@ -116,5 +116,22 @@ function setOutputSize() {
       + 'px');
 }
 $(setOutputSize);
-$(function() { $('#input').focus() });
 $(window).resize(setOutputSize);
+
+$(function() { $('#input').focus() });
+
+// Pull the current working directory from browser cookies
+// and use it as the prompt. The prompt floats over top
+// of the input box so we need to adjust the input's text
+// indent property to allow space for it.
+function displayCwd() {
+  var newPrompt = $.cookie('CWD') + '>';
+  var div = $('#cwd');
+  if (div.text() != newPrompt) {
+    div.text(newPrompt);
+    $('#input').css('paddingLeft',(div.outerWidth() + 5) + 'px');
+  }
+}
+$(displayCwd);
+$.ajaxComplete(displayCwd);
+
