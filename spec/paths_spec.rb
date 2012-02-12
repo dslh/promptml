@@ -28,6 +28,16 @@ module PrompTML
       Paths.make_absolute('are//ignored','/double//slashes').should == '/double/slashes/are/ignored'
     end
 
+    it "can derive a relative path from two absolute ones" do
+      Paths.make_relative('/a/b','/a/b/c').should == 'c'
+      Paths.make_relative('/a/','/a/b/c/').should == 'b/c'
+      Paths.make_relative('/a/b/c','/a/b/c/').should == '.'
+      Paths.make_relative('/','/a/b/c').should == 'a/b/c'
+      Paths.make_relative('/d/','/a/b/c/').should == '/a/b/c'
+      Paths.make_relative('/a/b/d','/a/b/c').should == '/a/b/c'
+      Paths.make_relative!('/a/b/d','/a/b/c/').should == '../c'
+    end
+
     it "can tell you if a file exists or not" do
       Paths.exist?('paths_spec.rb').should be_true
       Paths.exist?('/paths_spec.rb').should be_true
