@@ -31,6 +31,10 @@ module PrompTML
     def [] cmd
       @cmds[cmd]
     end
+
+    def commands
+      @cmds.keys
+    end
   
     def call env
       args = parse_args env

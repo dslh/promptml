@@ -10,6 +10,7 @@ require "#{LIB_DIR}/list.rb"
 require "#{LIB_DIR}/set_cwd.rb"
 require "#{LIB_DIR}/show.rb"
 require "#{LIB_DIR}/sleep.rb"
+require "#{LIB_DIR}/tab_completion.rb"
 require "#{LIB_DIR}/trollop_action.rb"
 
 PrompTML::Paths.root = 'client'
@@ -37,7 +38,8 @@ builder = Rack::Builder.new do
   end
 
   map '/tab' do
-    run PrompTML::TabCompletion.new(dispatch)
+    run Rack::Cookies.new(
+            PrompTML::TabCompletion.new(dispatch.commands))
   end
 end
 
