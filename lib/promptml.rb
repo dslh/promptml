@@ -6,6 +6,7 @@ require 'cgi'
 LIB_DIR = "#{File.dirname __FILE__}/promptml"
 require "#{LIB_DIR}/change_directory.rb"
 require "#{LIB_DIR}/dispatch.rb"
+require "#{LIB_DIR}/list.rb"
 require "#{LIB_DIR}/set_cwd.rb"
 require "#{LIB_DIR}/show.rb"
 require "#{LIB_DIR}/sleep.rb"
@@ -20,7 +21,8 @@ dispatch = PrompTML::Dispatch.new({
   'sleep' => PrompTML::Sleep.new,
   'inspect_env' => Proc.new { |env,args| CGI.escapeHTML env.inspect },
   'show' => PrompTML::Show.new,
-  'cd' => PrompTML::ChangeDirectory.new
+  'cd' => PrompTML::ChangeDirectory.new,
+  'ls' => PrompTML::List.new
   })
 
 builder = Rack::Builder.new do
@@ -32,6 +34,10 @@ builder = Rack::Builder.new do
 
   map '/cmd' do
     run Rack::Cookies.new(dispatch)
+  end
+
+  map '/tab' do
+    run PrompTML::TabCompletion.new(dispatch)
   end
 end
 
