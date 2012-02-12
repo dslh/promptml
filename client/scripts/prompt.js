@@ -122,8 +122,8 @@ $(function() { $('#input').focus() });
 
 // Pull the current working directory from browser cookies
 // and use it as the prompt. The prompt floats over top
-// of the input box so we need to adjust the input's text
-// indent property to allow space for it.
+// of the input box so we need to adjust the input's
+// padding property to allow space for it.
 function displayCwd() {
   var newPrompt = $.cookie('CWD') + '>';
   var div = $('#cwd');
