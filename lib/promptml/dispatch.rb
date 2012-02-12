@@ -41,7 +41,6 @@ module PrompTML
       begin
         return command_successful @cmds[cmd].call(env,args)
       rescue => e
-        puts e.backtrace
         return command_failed cmd, e
       end
     end
