@@ -50,6 +50,44 @@ $('#input').keydown(function(event) {
   p[0].selectionStart = p[0].selectionEnd = p.val().length;
 });
 
+// Tab completion service
+$('#input').keydown(function(event) {
+  if (event.which != 9 || event.shiftKey) {
+    return;
+  }
+  event.preventDefault();
+
+  // Pull from the prompt the root that should be
+  // sent to the server for tab completion. This is
+  // the portion of the prompt between the cursor and
+  // the preceding space.  var input = $('#input')[0];
+  var input = $('#input')[0];
+  var root = input.value.substring(0, input.selectionStart);
+  var start = root.lastIndexOf(' ');
+  root = root.substring(start + 1, root.length);
+  var type = start == -1 ? 'cmd' : 'file';
+
+  setWorking(true);
+  $.ajax({
+    type: 'GET', url: '/tab?' + type + '&' + escape(root),
+    dataType: 'html',
+    success: function (response) {
+      var before = input.value.substring(0, start + 1);
+      var after = input.value.substring(input.selectionEnd,
+                                        input.value.length);
+      if (response.match(/<.*>/)) {
+        appendResult(before + '<b>' + root + '</b>' + after, response);
+      } else {
+        input.value = before + response + after;
+        input.selectionStart = input.selectionEnd = before.length + response.length;
+      }
+    },
+    complete: function (request, message) {
+      setWorking(false);
+    }
+  });
+});
+
 // Send the user's command to the server when
 // the form is submitted.
 $('#prompt').submit(function(event) {
@@ -63,12 +101,12 @@ $('#prompt').submit(function(event) {
 
   updateHistory(cmd);
 
-  working = true;
-  $('#go').html('<img src="images/loading.gif"/>');
+  setWorking(true);
   $.ajax({
     type: 'GET', url: '/cmd?' + escapeCommand(cmd),
     dataType: 'html',
     success: function (response) {
+      input.val('');
       appendResult(cmd, response);
     },
     error: function (request, message, exception) {
@@ -79,13 +117,22 @@ $('#prompt').submit(function(event) {
         + ' ' + request.responseText);
     },
     complete: function (request, message) {
-      input.val('');
-      working = false;
-      $('#go').text('go');
+      setWorking(false);
       last_request = request;
     }
   });
 });
+
+// When the prompt is 'working' it is disabled
+function setWorking(w) {
+  working = w;
+  $('#input')[0].disabled = working;
+  if (working) {
+    $('#go').html('<img src="images/loading.gif"/>');
+  } else {
+    $('#go').text('go');
+  }
+}
 
 // Add the user's command and the response
 // returned from the server to the output list
