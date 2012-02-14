@@ -63,8 +63,8 @@ $('#input').keydown(function(event) {
   // the preceding space.  var input = $('#input')[0];
   var input = $('#input')[0];
   var root = input.value.substring(0, input.selectionStart);
-  var start = root.lastIndexOf(' ');
-  root = root.substring(start + 1, root.length);
+  var start = root.lastIndexOf(' ') + 1;
+  root = root.substring(start, root.length);
   var type = start == -1 ? 'cmd' : 'file';
 
   setWorking(true);
@@ -72,7 +72,7 @@ $('#input').keydown(function(event) {
     type: 'GET', url: '/tab?' + type + '&' + escape(root),
     dataType: 'html',
     success: function (response) {
-      var before = input.value.substring(0, start + 1);
+      var before = input.value.substring(0, start);
       var after = input.value.substring(input.selectionEnd,
                                         input.value.length);
       if (response.match(/<.*>/)) {
