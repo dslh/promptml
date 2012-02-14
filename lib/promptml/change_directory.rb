@@ -19,8 +19,10 @@ module PrompTML
 
       new_wd = Paths.make_absolute args[1], cwd
       raise "#{new_wd} is not a directory" unless Paths.directory? new_wd
-      cookies['CWD'] = new_wd
-      ''
+      response = Rack::Response.new
+      Paths.set_cwd! response.headers, new_wd
+      #response.set_cookie 'CWD', new_wd unless cookies.include? 'CWD'
+      response
     end
   end
 

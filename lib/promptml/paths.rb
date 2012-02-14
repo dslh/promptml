@@ -1,3 +1,5 @@
+require 'rack/utils'
+
 module PrompTML
 
   # Methods providing consistent path resolution and
@@ -86,6 +88,11 @@ module PrompTML
 
       def directory? path
         File.directory? real_path path
+      end
+
+      def set_cwd! header, cwd
+        value = { :value => cwd, :path => '/' }
+        Rack::Utils.set_cookie_header! header, "CWD", value
       end
 
       private

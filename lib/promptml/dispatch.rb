@@ -1,4 +1,5 @@
 require 'uri'
+require 'rack/response'
 
 module PrompTML
 
@@ -59,9 +60,14 @@ module PrompTML
     end
     
     def command_successful output
-      response output
+      if Rack::Response === output then
+        output
+      else
+        response output
+      end
     end
   
+    # Wraps a string in a rack-conformant response
     def response output
       output = output.to_s
       [200,

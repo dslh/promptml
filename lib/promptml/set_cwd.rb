@@ -1,5 +1,6 @@
 require 'rack/request'
 require 'rack/response'
+require "#{File.dirname __FILE__}/paths.rb"
 
 module PrompTML
 
@@ -13,9 +14,8 @@ module PrompTML
     def call env
       cookies = Rack::Request.new(env).cookies
       status,headers,body = @app.call env
-      resp = Rack::Response.new body,status,headers
-      resp.set_cookie 'CWD', '/' unless cookies.include? 'CWD'
-      resp.finish
+      Paths.set_cwd! headers, '/' unless cookies.include? 'CWD'
+      [status, headers, body]
     end
   end
 

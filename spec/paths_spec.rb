@@ -75,5 +75,19 @@ module PrompTML
       Paths.directory?('spec/paths_spec.rb').should be_false
       Paths.file?('spec').should be_false
     end
+    
+    it "should be able to set the cwd as a cookie" do
+      test_path = "test/path"
+      expected_cookie = "CWD=test%2Fpath"
+      header = {}
+      Paths.set_cwd! header, test_path
+      header['Set-Cookie'].should match expected_cookie
+
+      another_cookie = "COOKIE=cookie"
+      header = {"Set-Cookie" => another_cookie}
+      Paths.set_cwd! header, test_path
+      header['Set-Cookie'].should match expected_cookie
+      header['Set-Cookie'].should match another_cookie
+    end
   end
 end

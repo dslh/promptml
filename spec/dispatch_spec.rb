@@ -71,5 +71,11 @@ describe PrompTML::Dispatch do
     response = @dispatch.call({'QUERY_STRING' => 'array'})
     response[2][0].should == '[1, 2, 3]'
   end
+
+  it "returns Rack::Response objects without conversion" do
+    @dispatch['respond'] = Proc.new { |e,a| Rack::Response.new 'body' }
+    response = @dispatch.call({'QUERY_STRING' => 'respond'})
+    response.should be_a_kind_of Rack::Response
+  end
 end
 
