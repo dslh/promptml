@@ -1,3 +1,7 @@
 == promptml
 
-You should document your project here.
+PrompTML is a UI experiment that combines the rich browser experience with classic command shell style keyboard input. To get it running:
+
+    rackup lib/promptml.rb
+
+Then point your browser at `http://localhost/client/prompt.html`
