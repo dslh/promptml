@@ -75,7 +75,7 @@ module PrompTML
     end
 
     def single_match match
-      match << ' ' unless match[-1] == '/'
+      match += ' ' unless match[-1] == '/'
       Rack::Response.new match
     end
 
