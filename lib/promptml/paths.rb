@@ -12,13 +12,13 @@ module PrompTML
       end
       
       def absolute? path
-        path[0] == '/' and not /\/\.\.($|\/)/ =~ path
+        path[0..0] == '/' and not /\/\.\.($|\/)/ =~ path
       end
 
       # Combines a relative path with an absolute path
       # to produce a new absolute path.
       def make_absolute path, base = '/'
-        base = '/' if path[0] == '/'
+        base = '/' if path[0..0] == '/'
         raise "base path (#{base}) is not absolute" unless absolute? base
 
         new_path = elements_of base
