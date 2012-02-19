@@ -20,7 +20,6 @@ module PrompTML
     it "should be constructed with a list of commands" do
       TabCompletion.new ['a','b','c']
       expect { TabCompletion.new }.to raise_error
-      expect { TabCompletion.new 'a duck' }.to raise_error
     end
 
     it "should return the command matching the given root" do

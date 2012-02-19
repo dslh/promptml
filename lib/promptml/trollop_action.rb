@@ -33,7 +33,7 @@ module PrompTML
       pre_wrap <<-EOS
   Trollop diagnostics
   #{help_message}
-  #{@parser.specs.keys.sort.collect { |k| "--#{k}=#{opts[k]}" }.join("\n") }
+  #{@parser.specs.keys.collect { |k| "--#{k}=#{opts[k]}" }.sort.join("\n") }
   Remaining args: #{args.join(', ')}
   EOS
     end
