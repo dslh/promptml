@@ -21,7 +21,7 @@ module PrompTML
   #   message will be produced.
   class TabCompletion
     def initialize commands
-      raise TypeError unless commands.public_methods.include? :find_all
+      raise TypeError unless commands.respond_to? :select
       @commands = commands
     end
 
