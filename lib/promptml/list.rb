@@ -18,7 +18,7 @@ module PrompTML
       args.each do |pattern|
         pattern = Paths.make_absolute pattern, cwd
         Paths[pattern].each do |file|
-          type = Paths.directory? file ? 'directory' : 'file'
+          type = Paths.directory?(file) ? 'directory' : 'file'
           output << "<li class='#{type}'>#{File.basename file}</li>"
         end
       end
