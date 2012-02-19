@@ -13,6 +13,8 @@ require "#{LIB_DIR}/sleep.rb"
 require "#{LIB_DIR}/tab_completion.rb"
 require "#{LIB_DIR}/trollop_action.rb"
 
+CLIENT_SIDE_COMMANDS = ['clear']
+
 PrompTML::Paths.root = 'client'
 dispatch = PrompTML::Dispatch.new({
   'trollop' => PrompTML::TrollopAction.new do
@@ -39,7 +41,8 @@ builder = Rack::Builder.new do
 
   map '/tab' do
     run Rack::Cookies.new(
-            PrompTML::TabCompletion.new(dispatch.commands))
+            PrompTML::TabCompletion.new(
+                    dispatch.commands + CLIENT_SIDE_COMMANDS))
   end
 end
 

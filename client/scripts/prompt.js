@@ -3,6 +3,26 @@
 var history = [''];
 var history_position = 0;
 
+// Commands that are intercepted by the client
+// and executed locally. Don't forget to add
+// these to the server side tab completion list.
+// We use the cmd_ prefix to avoid collisions with
+// other object properties.
+var client_commands = {
+  cmd_clear: function() {$("#output").html('')}
+}
+var command_matcher = /^\s*(\S+)(\s.*$)?/
+function execute_on_client(command) {
+  var match = command_matcher.exec(command);
+  if (!match) return false;
+
+  var func = client_commands['cmd_' + match[1]];
+  if (!func) return false;
+
+  func(match[2]);
+  return true;
+}
+
 // True if there is an ajax request en route
 // to the server. The prompt only allows one
 // request at a time.
@@ -65,7 +85,7 @@ $('#input').keydown(function(event) {
   var root = input.value.substring(0, input.selectionStart);
   var start = root.lastIndexOf(' ') + 1;
   root = root.substring(start, root.length);
-  var type = start == -1 ? 'cmd' : 'file';
+  var type = start == 0 ? 'cmd' : 'file';
 
   setWorking(true);
   $.ajax({
@@ -100,6 +120,11 @@ $('#prompt').submit(function(event) {
   if (cmd.length == 0) return;
 
   updateHistory(cmd);
+
+  if (execute_on_client(cmd)) {
+    input.val('');
+    return;
+  }
 
   setWorking(true);
   $.ajax({
@@ -140,7 +165,7 @@ function appendResult(command,response) {
   var output = $('#output');
   var scroll = $('#output_scroll');
   output.append(
-        '<li><div class="command">' + command + '</div>' +
+        '<li class="action"><div class="command">' + command + '</div>' +
         '<div class="response">' + response + '</div></li>'
   );
   if (output.outerHeight() > scroll.innerHeight()) {
