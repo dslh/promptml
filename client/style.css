@@ -40,6 +40,43 @@ body {
   margin: 0;
 }
 
+/* http://www.colourlovers.com/palette/452030/you_will_be_free
+ * #F7F9FE
+ * #ECF1F2
+ * #DCE8EB
+ * #CBDBE0
+ * #BED2D9
+ */
+body {
+  background-color: #F7F9FE;
+}
+ul#output {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+ul#output li.action {
+  margin: 1em;
+  border: 2px solid #BED2D9;
+  border-radius: 1em;
+  padding: 0.5em;
+  display: block;
+  background-color: #ECF1F2;
+  overflow-x: auto;
+  box-shadow: 0.2em 0.2em 1em 0 #BED2D9 inset;
+}
+ul#output li.action div.command {
+  margin: 0;
+  padding: 0.2em;
+  font-family: inconsolata, courier, monospace;
+  font-size: 0.8em;
+  border-bottom: 1px solid #CBDBE0;
+  text-shadow: 0 0 1em white;
+}
+ul#output li.action div.response {
+  margin: 0.7em 0 0 0.7em;
+}
+
 pre {
   font-family: inconsolata, courier, monospace;
 }
