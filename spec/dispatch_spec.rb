@@ -69,7 +69,7 @@ describe PrompTML::Dispatch do
     response = @dispatch.call({'QUERY_STRING' => 'number'})
     response[2][0].should == '10'
     response = @dispatch.call({'QUERY_STRING' => 'array'})
-    response[2][0].should == '[1, 2, 3]'
+    response[2][0].should == [1,2,3].to_s
   end
 
   it "returns Rack::Response objects without conversion" do

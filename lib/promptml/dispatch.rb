@@ -22,7 +22,7 @@ module PrompTML
     end
   
     def []= cmd,action
-      unless action.public_methods.include? :call
+      unless action.respond_to? :call
         raise "Action must implement call method"
       end
   
