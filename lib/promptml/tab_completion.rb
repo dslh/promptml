@@ -9,16 +9,16 @@ module PrompTML
   #   /path/to/tab/completion?(cmd|file)&<root>
   #
   # TabCompletion will return four types of result:
-  #  - When there is only one match for the given root, it will
-  #    contain only the match, with a trailing space to denote
-  #    that it is an exact match.
-  #  - When the root given is ambiguous, it will be an HTML
-  #    list of potential matches.
-  #  - When the given root is part of a longer root common to
-  #    all matches, it will contain only the longer root with
-  #    no trailing space.
-  #  - When there are no matches a short informational HTML
-  #    message will be produced.
+  # * When there is only one match for the given root, it will
+  #   contain only the match, with a trailing space to denote
+  #   that it is an exact match.
+  # * When the root given is ambiguous, it will be an HTML
+  #   list of potential matches.
+  # * When the given root is part of a longer root common to
+  #   all matches, it will contain only the longer root with
+  #   no trailing space.
+  # * When there are no matches a short informational HTML
+  #   message will be produced.
   class TabCompletion
     def initialize commands
       raise TypeError unless commands.public_methods.include? :find_all
