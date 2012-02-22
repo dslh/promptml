@@ -80,3 +80,23 @@ ul#output li.action div.response {
 pre {
   font-family: inconsolata, courier, monospace;
 }
+
+ul.file_list {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+ul.file_list li {
+  float: left;
+  margin: 0.2em;
+  padding: 0.2em 0.5em 0.2em 25px;
+  border: solid 1px #CBDBE0;
+  border-radius: 0.8em;
+  box-shadow: 0.1em 0.1em 0.1em #AAA;
+}
+ul.file_list li.directory {
+  background: url('images/folder.gif') no-repeat 5px center #DCE8EB;
+}
+ul.file_list li.file {
+  background: url('images/text.gif') no-repeat 5px center #DCE8EB;
+}
