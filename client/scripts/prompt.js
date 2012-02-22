@@ -23,6 +23,13 @@ function execute_on_client(command) {
   return true;
 }
 
+// Enters the given command into the prompt
+// and executes it.
+function promptml(cmd) {
+  $('#input').val(cmd);
+  $('#prompt').submit();
+}
+
 // True if there is an ajax request en route
 // to the server. The prompt only allows one
 // request at a time.
@@ -144,6 +151,7 @@ $('#prompt').submit(function(event) {
     complete: function (request, message) {
       setWorking(false);
       last_request = request;
+      input.focus();
     }
   });
 });
