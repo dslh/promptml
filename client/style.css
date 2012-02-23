@@ -1,6 +1,12 @@
 body {
   margin: 0;
 }
+a {
+  text-decoration: none;
+}
+a.cmd {
+  font-family: inconsolata, courier, monospace;
+}
 
 #output_scroll {
   width: 100%;
@@ -81,22 +87,31 @@ pre {
   font-family: inconsolata, courier, monospace;
 }
 
-ul.file_list {
+div.file_list {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-ul.file_list li {
+div.file_list a.cmd {
   float: left;
-  margin: 0.2em;
+  margin: 2.5pt;
   padding: 0.2em 0.5em 0.2em 25px;
   border: solid 1px #CBDBE0;
   border-radius: 0.8em;
   box-shadow: 0.1em 0.1em 0.1em #AAA;
 }
-ul.file_list li.directory {
+div.file_list a.cmd.directory {
   background: url('images/folder.gif') no-repeat 5px center #DCE8EB;
 }
-ul.file_list li.file {
+div.file_list a.cmd.file {
   background: url('images/text.gif') no-repeat 5px center #DCE8EB;
+}
+
+#output div.file_list a.cmd:hover {
+  background-color: #ECF1F2;
+}
+#output div.file_list a.cmd:active {
+  background-color: #F7F9FE;
+  margin: 3pt 2pt 2pt 3pt;
+  box-shadow: none;
 }
