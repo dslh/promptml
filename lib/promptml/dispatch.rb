@@ -56,7 +56,18 @@ module PrompTML
     end
     
     def command_failed command, error
-      response "<span class='error'>Command '#{command}' failed: #{error}</span>"
+      response <<-EOS
+<span class='error'>
+  Command '#{command}' failed: #{error}
+</span>
+<ol class='stack_trace'>
+  <li>
+      #{error.backtrace.join("
+  </li><li>
+")}
+  </li>
+</ol>
+EOS
     end
     
     def command_successful output

@@ -99,12 +99,16 @@ div.file_list a.cmd {
   border: solid 1px #CBDBE0;
   border-radius: 0.8em;
   box-shadow: 0.1em 0.1em 0.1em #AAA;
+  background: no-repeat 5px center #DCE8EB;
 }
 div.file_list a.cmd.directory {
-  background: url('images/folder.gif') no-repeat 5px center #DCE8EB;
+  background-image: url('images/folder.gif');
 }
 div.file_list a.cmd.file {
-  background: url('images/text.gif') no-repeat 5px center #DCE8EB;
+  background-image: url('images/text.gif');
+}
+div.file_list a.cmd.app {
+  background-image: url('images/cmd.gif');
 }
 
 #output div.file_list a.cmd:hover {

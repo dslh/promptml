@@ -95,9 +95,9 @@ module PrompTML
         Rack::Utils.set_cookie_header! header, "CWD", value
       end
 
-      def real_path path
+      def real_path path, base = '/'
         raise "Paths.root is not set" unless @root
-        path = make_absolute path unless absolute? path
+        path = make_absolute path, base
         @root + path
       end
 

@@ -12,14 +12,14 @@ module PrompTML
     IMAGE_EXTENSIONS = ['.jpg','.jpeg','.gif','.png','.webp']
     class << self
       def image? file
-        IMAGE_EXTENSIONS.include? File.extname(file)
+        IMAGE_EXTENSIONS.include? File.extname(file).downcase
       end
     end
 
     def call env, args
       args.shift
       output = StringIO.new
-      cwd = env['rack.cookies']['CWD']
+      cwd = Paths.cwd env
 
       args.each do |pattern|
         pattern = Paths.make_absolute pattern, cwd
