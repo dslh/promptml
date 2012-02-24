@@ -194,21 +194,27 @@ function escapeCommand(cmd) {
   return escape(cmd.replace(/ /g,'+'));
 }
 
+function getFunction(name) {
+  var func = window[name];
+  if (func && func.constructor.name == 'Function')
+    return func;
+  else
+    return null;
+}
+
+
 function processMetaTags(dom) {
   var data = $('meta',dom).data();
+  if (!data)
+    return;
+
   if (data.alert)
     window.alert(data.alert);
-
-  var onload = null;
-  if (data.onload) {
-    var o = window[data.onload];
-    if (o && o.constructor.name == 'Function')
-      onload = o;
-  }
 
   if (data.script) {
     $.getScript(data.script)
       .done(function(script, textStatus) {
+        var onload = getFunction(data.onload);
         if (onload)
           onload(dom);
       })
@@ -217,6 +223,7 @@ function processMetaTags(dom) {
                data.script + '</code>');
       });
   } else {
+    var onload = getFunction(data.onload);
     if (onload)
       onload(dom);
   }
