@@ -107,13 +107,13 @@ div.file_list a.cmd {
   -o-transition: background-color: 0.4s;
 }
 div.file_list a.cmd.directory {
-  background-image: url('images/folder.gif');
+  background-image: url('../images/folder.gif');
 }
 div.file_list a.cmd.file {
-  background-image: url('images/text.gif');
+  background-image: url('../images/text.gif');
 }
 div.file_list a.cmd.app {
-  background-image: url('images/cmd.gif');
+  background-image: url('../images/cmd.gif');
 }
 
 #output div.file_list a.cmd:hover {
