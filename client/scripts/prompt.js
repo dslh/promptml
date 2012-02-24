@@ -216,7 +216,7 @@ function processMetaTags(dom) {
       .done(function(script, textStatus) {
         var onload = getFunction(data.onload);
         if (onload)
-          onload(dom);
+          onload(dom,data);
       })
       .fail(function(jqxhr, settings, exception) {
         appendResult('Warning','Failed to retrieve script <code>' +
@@ -225,12 +225,19 @@ function processMetaTags(dom) {
   } else {
     var onload = getFunction(data.onload);
     if (onload)
-      onload(dom);
+      onload(dom,data);
   }
 
   if (data.css) {
     getCss(data.css);
   }
+}
+
+function makeCodeMirrorEditor(dom,data) {
+  var textarea = $('textarea',dom)[0]
+  var myCodeMirror = CodeMirror(function(elt) {
+    textarea.parentNode.replaceChild(elt, textarea);
+  }, {value: textarea.value, mode: data.mode});
 }
 
 // Loads the specified css file and embeds it
