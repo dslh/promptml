@@ -1,3 +1,6 @@
+// Cache javascripts and such downloaded by jQuery.
+$.ajaxSetup({cache:true});
+
 // A history of commands sent to the server,
 // oldest first.
 var history = [''];
@@ -176,6 +179,9 @@ function appendResult(command,response) {
         '<li class="action"><div class="command">' + command + '</div>' +
         '<div class="response">' + response + '</div></li>'
   );
+  var dom = $('#output>li').last();
+  processMetaTags(dom);
+
   if (output.outerHeight() > scroll.innerHeight()) {
     scroll.animate({ scrollTop:
       (output.outerHeight() - scroll.innerHeight() + 32) },
@@ -186,6 +192,34 @@ function appendResult(command,response) {
 // URI encode the user's command
 function escapeCommand(cmd) {
   return escape(cmd.replace(/ /g,'+'));
+}
+
+function processMetaTags(dom) {
+  var data = $('meta',dom).data();
+  if (data.alert)
+    window.alert(data.alert);
+
+  var onload = null;
+  if (data.onload) {
+    var o = window[data.onload];
+    if (o && o.constructor.name == 'Function')
+      onload = o;
+  }
+
+  if (data.script) {
+    $.getScript(data.script)
+      .done(function(script, textStatus) {
+        if (onload)
+          onload(dom);
+      })
+      .fail(function(jqxhr, settings, exception) {
+        appendResult('Warning','Failed to retrieve script <code>' +
+               data.script + '</code>');
+      });
+  } else {
+    if (onload)
+      onload(dom);
+  }
 }
 
 // Style-related. Ensure the output window fills the browser,
