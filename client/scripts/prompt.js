@@ -1,6 +1,3 @@
-// Cache javascripts and such downloaded by jQuery.
-$.ajaxSetup({cache:true});
-
 // A history of commands sent to the server,
 // oldest first.
 var history = [''];
@@ -208,6 +205,9 @@ function processMetaTags(dom) {
   if (!data)
     return;
 
+  if (data.class)
+    dom.addClass(data.class);
+
   if (data.alert)
     window.alert(data.alert);
 
@@ -226,6 +226,34 @@ function processMetaTags(dom) {
     var onload = getFunction(data.onload);
     if (onload)
       onload(dom);
+  }
+
+  if (data.css) {
+    getCss(data.css);
+  }
+}
+
+// Loads the specified css file and embeds it
+// into the page. Won't load the same file twice
+// and uses a special method for IE.
+var gotCss = {}
+function getCss(url) {
+  if (gotCss['css_' + url]) return;
+
+  if (document.createStyleSheet) {
+    gotCss['css_' + url] = true;
+    try {
+      document.createStyleSheet(url);
+    } catch (e) {
+      gotCss['css_' + url] = false;
+    }
+  } else {
+    $.get(url)
+      .done(function(css) {
+        $('<style type="text/css"></style>')
+          .html(css).appendTo("head");
+        gotCss['css_' + url] = true;
+      });
   }
 }
 
