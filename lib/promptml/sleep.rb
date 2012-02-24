@@ -9,10 +9,10 @@ module PrompTML
     def initialize
       super do
         banner <<-EOS
-  Usage: sleep <seconds>
-  Waits the specified number of seconds and
-  then exits.
-  EOS
+Usage: sleep <seconds>
+Waits the specified number of seconds and
+then exits.
+EOS
       end
     end
   
