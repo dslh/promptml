@@ -33,7 +33,7 @@ module PrompTML
           case
           when Paths.directory?(file)
             item file, 'directory', 'cd'
-          when File.extname(file) == '.app'
+          when Paths.executable?(file)
             item file, 'app', 'run'
           else
             item file, 'file', 'show'

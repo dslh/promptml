@@ -14,8 +14,8 @@ module PrompTML
 
       cwd = Paths.cwd env
       app = Paths.real_path args[0], cwd
-      return error "No such file '#{args[1]}'" unless File.exist? app
-      return error "Can only run files with the .app extension" unless File.extname(app) == ".app"
+      return error "No such file '#{args[0]}'" unless File.exist? app
+      return error "Can only run .app and .erb files" unless Paths.executable? app
 
       cmd = args.shift
       erb = Erubis::Eruby.new File.read(app)

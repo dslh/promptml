@@ -82,6 +82,10 @@ module PrompTML
         Dir[@root + pattern].collect { |path| path[@root.length..-1] }
       end
 
+      def executable? path
+        ['.app','.erb'].include? File.extname(path)
+      end
+
       def file? path
         File.file? real_path path
       end
