@@ -1,0 +1,11 @@
+source "http://rubygems.org"
+
+gem "rack"
+gem "rack-contrib"
+gem "rake"
+gem "cgi"
+gem "trollop"
+gem "curses"
+gem "open-uri"
+gem "erubis"
+gem "coderay"
