@@ -3,7 +3,12 @@
   <title>PrompTML</title>
   <script type='text/javascript' src='scripts/jquery.js'></script>
   <script type='text/javascript' src='scripts/jquery.cookie.js'></script>
-  <link rel='stylesheet' href='style.css' type='text/css' />
+  <script type='text/javascript' src='scripts/codemirror/lib/codemirror.js'></script>
+  <script type='text/javascript' src='scripts/codemirror/mode/javascript/javascript.js'></script>
+  <script type='text/javascript' src='scripts/codemirror/mode/css/css.js'></script>
+  <script type='text/javascript' src='scripts/codemirror/mode/xml/xml.js'></script>
+  <link rel='stylesheet' href='css/main.css' type='text/css' />
+  <link rel='stylesheet' href='scripts/codemirror/lib/codemirror.css' type='text/css' />
 </head>
 <body>
   <div id='output_scroll'>
@@ -12,8 +17,8 @@
   <form id='prompt' name='prompt'
         method='GET' action='/cmd'>
     <div id='cwd'>&gt;</div>
-    <input size='41' type='text'
-          placeholder="enter commands here"
+    <input size='41' type='text' autocomplete='off'
+          placeholder='enter commands here'
           id='input' name='cmd' spellcheck='false' />
     <button id='go' name='go' type='submit'>go</button>
   </form>

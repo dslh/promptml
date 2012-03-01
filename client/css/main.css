@@ -1,6 +1,12 @@
 body {
   margin: 0;
 }
+a {
+  text-decoration: none;
+}
+a.cmd {
+  font-family: inconsolata, courier, monospace;
+}
 
 #output_scroll {
   width: 100%;
@@ -81,22 +87,40 @@ pre {
   font-family: inconsolata, courier, monospace;
 }
 
-ul.file_list {
+div.file_list {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
-ul.file_list li {
+div.file_list a.cmd {
   float: left;
-  margin: 0.2em;
+  margin: 2.5pt;
   padding: 0.2em 0.5em 0.2em 25px;
   border: solid 1px #CBDBE0;
   border-radius: 0.8em;
   box-shadow: 0.1em 0.1em 0.1em #AAA;
+  background: no-repeat 5px center #DCE8EB;
+
+  transition: background-color 0.4s;
+  -webkit-transition: background-color 0.4s;
+  -moz-transition: background-color: 0.4s;
+  -o-transition: background-color: 0.4s;
 }
-ul.file_list li.directory {
-  background: url('images/folder.gif') no-repeat 5px center #DCE8EB;
+div.file_list a.cmd.directory {
+  background-image: url('../images/folder.gif');
 }
-ul.file_list li.file {
-  background: url('images/text.gif') no-repeat 5px center #DCE8EB;
+div.file_list a.cmd.file {
+  background-image: url('../images/text.gif');
+}
+div.file_list a.cmd.app {
+  background-image: url('../images/cmd.gif');
+}
+
+#output div.file_list a.cmd:hover {
+  background-color: #ECF1F2;
+}
+#output div.file_list a.cmd:active {
+  background-color: #F7F9FE;
+  margin: 3pt 2pt 2pt 3pt;
+  box-shadow: none;
 }

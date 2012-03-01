@@ -1,5 +1,6 @@
 require 'rack/request'
 require "#{File.dirname __FILE__}/paths.rb"
+require "#{File.dirname __FILE__}/list.rb"
 
 module PrompTML
 
@@ -19,10 +20,14 @@ module PrompTML
 
       new_wd = Paths.make_absolute args[1], cwd
       raise "#{new_wd} is not a directory" unless Paths.directory? new_wd
-      response = Rack::Response.new
+      response = Rack::Response.new list(new_wd)
       Paths.set_cwd! response.headers, new_wd
-      #response.set_cookie 'CWD', new_wd unless cookies.include? 'CWD'
       response
+    end
+
+    def list dir
+      pattern = Paths.make_absolute '*', dir
+      "<div class='file_list'>#{List.items(pattern)}</div>"
     end
   end
 

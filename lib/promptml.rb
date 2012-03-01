@@ -7,6 +7,7 @@ LIB_DIR = "#{File.dirname __FILE__}/promptml"
 require "#{LIB_DIR}/change_directory.rb"
 require "#{LIB_DIR}/dispatch.rb"
 require "#{LIB_DIR}/list.rb"
+require "#{LIB_DIR}/run.rb"
 require "#{LIB_DIR}/set_cwd.rb"
 require "#{LIB_DIR}/show.rb"
 require "#{LIB_DIR}/sleep.rb"
@@ -25,7 +26,8 @@ dispatch = PrompTML::Dispatch.new({
   'inspect_env' => Proc.new { |env,args| CGI.escapeHTML env.inspect },
   'show' => PrompTML::Show.new,
   'cd' => PrompTML::ChangeDirectory.new,
-  'ls' => PrompTML::List.new
+  'ls' => PrompTML::List.new,
+  'run' => PrompTML::Run.new
   })
 
 builder = Rack::Builder.new do

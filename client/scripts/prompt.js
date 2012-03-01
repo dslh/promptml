@@ -176,6 +176,9 @@ function appendResult(command,response) {
         '<li class="action"><div class="command">' + command + '</div>' +
         '<div class="response">' + response + '</div></li>'
   );
+  var dom = $('#output>li').last();
+  processMetaTags(dom);
+
   if (output.outerHeight() > scroll.innerHeight()) {
     scroll.animate({ scrollTop:
       (output.outerHeight() - scroll.innerHeight() + 32) },
@@ -186,6 +189,79 @@ function appendResult(command,response) {
 // URI encode the user's command
 function escapeCommand(cmd) {
   return escape(cmd.replace(/ /g,'+'));
+}
+
+function getFunction(name) {
+  var func = window[name];
+  if (func && func.constructor.name == 'Function')
+    return func;
+  else
+    return null;
+}
+
+
+function processMetaTags(dom) {
+  var data = $('meta',dom).data();
+  if (!data)
+    return;
+
+  if (data.class)
+    dom.addClass(data.class);
+
+  if (data.alert)
+    window.alert(data.alert);
+
+  if (data.script) {
+    $.getScript(data.script)
+      .done(function(script, textStatus) {
+        var onload = getFunction(data.onload);
+        if (onload)
+          onload(dom,data);
+      })
+      .fail(function(jqxhr, settings, exception) {
+        appendResult('Warning','Failed to retrieve script <code>' +
+               data.script + '</code>');
+      });
+  } else {
+    var onload = getFunction(data.onload);
+    if (onload)
+      onload(dom,data);
+  }
+
+  if (data.css) {
+    getCss(data.css);
+  }
+}
+
+function makeCodeMirrorEditor(dom,data) {
+  var textarea = $('textarea',dom)[0]
+  var myCodeMirror = CodeMirror(function(elt) {
+    textarea.parentNode.replaceChild(elt, textarea);
+  }, {value: textarea.value, mode: data.mode});
+}
+
+// Loads the specified css file and embeds it
+// into the page. Won't load the same file twice
+// and uses a special method for IE.
+var gotCss = {}
+function getCss(url) {
+  if (gotCss['css_' + url]) return;
+
+  if (document.createStyleSheet) {
+    gotCss['css_' + url] = true;
+    try {
+      document.createStyleSheet(url);
+    } catch (e) {
+      gotCss['css_' + url] = false;
+    }
+  } else {
+    $.get(url)
+      .done(function(css) {
+        $('<style type="text/css"></style>')
+          .html(css).appendTo("head");
+        gotCss['css_' + url] = true;
+      });
+  }
 }
 
 // Style-related. Ensure the output window fills the browser,
