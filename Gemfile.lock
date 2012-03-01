@@ -1,17 +1,8 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    cgi_multipart_eof_fix (2.5.0)
     coderay (1.0.5)
-    daemons (1.1.8)
     erubis (2.7.0)
-    fastthread (1.0.7)
-    gem_plugin (0.2.3)
-    mongrel (1.1.5)
-      cgi_multipart_eof_fix (>= 2.4)
-      daemons (>= 1.0.3)
-      fastthread (>= 1.0.1)
-      gem_plugin (>= 0.2.3)
     rack (1.4.1)
     rack-contrib (1.1.0)
       rack (>= 0.9.1)
@@ -24,7 +15,6 @@ PLATFORMS
 DEPENDENCIES
   coderay
   erubis
-  mongrel
   rack
   rack-contrib
   rake
