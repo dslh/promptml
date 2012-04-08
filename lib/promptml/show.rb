@@ -6,8 +6,7 @@ require "#{File.dirname __FILE__}/paths.rb"
 module PrompTML
 
   # The Show command shows the requested
-  # document(s) in the output. So far it
-  # only supports images.
+  # document(s) in the output.
   class Show
     IMAGE_EXTENSIONS = ['.jpg','.jpeg','.gif','.png','.webp']
     class << self
@@ -32,12 +31,13 @@ module PrompTML
     end
 
     def show_file file
+      type = if File.extname(file) == '.app' then :erb else :auto end
       <<-EOS
 <div class='file'>
   <span class='file_name'>#{File.basename file}</span>
   #{Show.image?(file) ?
       "<img src='/client#{file}' title='#{file}'/>" :
-      CodeRay.scan_file(Paths.real_path file).div}
+      CodeRay.scan_file(Paths.real_path(file),type).div}
 </div>
 EOS
     end
