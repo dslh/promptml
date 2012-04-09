@@ -25,17 +25,16 @@
   when '.rb'
     'ruby'
   when '.erb', '.app'
-    'htmlembedded'
+    'application/x-ejs'
   when '.html', '.htm'
     'htmlmixed'
   else
     'htmlmixed'
   end
 %>
-<meta data-script='scripts/codemirror/mode/<%=mode%>/<%=mode%>.js'
-  data-onload='makeCodeMirrorEditor' data-mode='<%=mode%>' />
+<meta data-onload='makeCodeMirrorEditor' data-mode='<%=mode%>' />
 <form><textarea>
 <% if Paths.exist? file %>
-<%=File.read Paths.real_path(file)%>
+<%== File.read Paths.real_path(file) %>
 <% end %>
 </textarea></form>
