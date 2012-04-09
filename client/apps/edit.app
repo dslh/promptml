@@ -32,9 +32,11 @@
     'htmlmixed'
   end
 %>
-<meta data-onload='makeCodeMirrorEditor' data-mode='<%=mode%>' />
+<meta data-onload='makeCodeMirrorEditor' data-class='CodeMirror-action'
+  data-mode='<%=mode%>' data-path='<%=file%>' />
 <form class='CodeMirror-form'><textarea>
 <% if Paths.exist? file %>
 <%== File.read Paths.real_path(file) %>
 <% end %>
 </textarea></form>
+<button class='CodeMirror-save' disabled='true'>saved</button>

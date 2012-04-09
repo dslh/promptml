@@ -235,9 +235,31 @@ function processMetaTags(dom) {
 
 function makeCodeMirrorEditor(dom,data) {
   var textarea = $('textarea',dom)[0]
-  var myCodeMirror = CodeMirror(function(elt) {
+  var button = $('button.CodeMirror-save',dom)
+  var editor = CodeMirror(function(elt) {
     textarea.parentNode.replaceChild(elt, textarea);
-  }, {value: textarea.value, mode: data.mode});
+  }, {
+    value: textarea.value,
+    mode: data.mode,
+    onChange: function(editor,changes) {
+      button.text('save');
+      button.prop('disabled',null);
+    }
+  });
+  $('button',dom).click(function() {
+    $.ajax({
+      url: '/client' + data.path,
+      type: 'put',
+      data: editor.getValue(),
+      success: function() {
+        button.text('saved');
+        button.prop('disabled','true');
+      },
+      error: function() {
+        button.text('not saved!');
+      }
+    });
+  });
 }
 
 // Loads the specified css file and embeds it

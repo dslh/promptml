@@ -7,6 +7,7 @@ LIB_DIR = "#{File.dirname __FILE__}/lib/promptml"
 require "#{LIB_DIR}/change_directory.rb"
 require "#{LIB_DIR}/dispatch.rb"
 require "#{LIB_DIR}/list.rb"
+require "#{LIB_DIR}/put_file.rb"
 require "#{LIB_DIR}/run.rb"
 require "#{LIB_DIR}/set_cwd.rb"
 require "#{LIB_DIR}/show.rb"
@@ -32,9 +33,14 @@ dispatch = PrompTML::Dispatch.new({
 
 builder = Rack::Builder.new do
   use Rack::CommonLogger
+  use Rack::Logger
 
   map '/client' do
-    run PrompTML::SetCwd.new(Rack::File.new('client'))
+    run PrompTML::SetCwd.new(
+          PrompTML::PutFile.new(
+            Rack::File.new('client')
+          )
+        )
   end
 
   map '/cmd' do
