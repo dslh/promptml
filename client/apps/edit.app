@@ -33,7 +33,7 @@
   end
 %>
 <meta data-onload='makeCodeMirrorEditor' data-mode='<%=mode%>' />
-<form><textarea>
+<form class='CodeMirror-form'><textarea>
 <% if Paths.exist? file %>
 <%== File.read Paths.real_path(file) %>
 <% end %>
