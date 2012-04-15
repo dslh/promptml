@@ -22,7 +22,7 @@
     'javascript'
   when '.css'
     'css'
-  when '.rb'
+  when '.rb', '.ru'
     'ruby'
   when '.erb', '.app'
     'application/x-ejs'
@@ -40,3 +40,4 @@
 <% end %>
 </textarea></form>
 <button class='CodeMirror-save' disabled='true'>saved</button>
+
