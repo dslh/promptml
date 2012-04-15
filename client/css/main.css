@@ -70,6 +70,14 @@ ul#output li.action {
   background-color: #ECF1F2;
   overflow-x: auto;
   box-shadow: 0.2em 0.2em 1em 0 #BED2D9 inset;
+
+  transition: background-color 0.4s;
+  -webkit-transition: background-color 0.4s;
+  -moz-transition: background-color: 0.4s;
+  -o-transition: background-color: 0.4s;
+}
+ul#output li.action.selected {
+  background-color: #FFFED8;
 }
 ul#output li.action div.command {
   margin: 0;
@@ -78,6 +86,14 @@ ul#output li.action div.command {
   font-size: 0.8em;
   border-bottom: 1px solid #CBDBE0;
   text-shadow: 0 0 1em white;
+}
+ul#output li.action form.command {
+  width: 100%;
+}
+ul#output li.action form.command input {
+  width: 100%;
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
 }
 ul#output li.action div.response {
   margin: 0.7em 0 0 0.7em;
@@ -124,3 +140,14 @@ div.file_list a.cmd.app {
   margin: 3pt 2pt 2pt 3pt;
   box-shadow: none;
 }
+.CodeMirror-scroll {
+  box-shadow: 0 0 0.4em 0.2em white;
+  background-color: white;
+  border-radius: 0.5em;
+  margin-right: 0.3em;
+}
+
+
+
+
+

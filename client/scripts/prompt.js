@@ -1,18 +1,18 @@
-// A history of commands sent to the server,
-// oldest first.
-var history = [''];
-var history_position = 0;
-
 // Commands that are intercepted by the client
 // and executed locally. Don't forget to add
 // these to the server side tab completion list.
 // We use the cmd_ prefix to avoid collisions with
 // other object properties.
 var client_commands = {
-  cmd_clear: function() {$("#output").html('')}
+  cmd_clear: function() {
+    $(COMMAND_HISTORY).each(function() {
+      cleared_history.push($(this).text());
+    });
+    $("#output").html('')
+  }
 }
 var command_matcher = /^\s*(\S+)(\s.*$)?/
-function execute_on_client(command) {
+function execute_on_client(command,container) {
   var match = command_matcher.exec(command);
   if (!match) return false;
 
@@ -38,47 +38,12 @@ var working = false;
 // Debugging variable, remove at some point maybe
 var last_request = null;
 
-// Add an executed command onto the history stack
-function updateHistory(cmd) {
-  history.pop(); // Get rid of the blank off the end
-  history.push(cmd); // Put the new command on the stack
-  history.push(''); // Put a new blank on the end
-  history_position = history.length - 1;
-}
-
-// Track back and forth through the history stack
-$('#input').keydown(function(event) {
-  // 38 == UP key
-  // 40 == DOWN key
-  if (event.which != 38 && event.which != 40) {
-    return;
-  }
-
-  // We save the current command back into the stack
-  // in case it's been modified.
-  var p = $('#input');
-  var current_cmd = p.val();
-  history[history_position] = current_cmd;
-
-  event.preventDefault();
-  if (event.which == 38) {
-    if (history_position == 0) {
-      return;
-    }
-    p.val(history[--history_position]);
-  } else {
-    if (history_position == history.length - 1) {
-      return;
-    }
-    p.val(history[++history_position]);
-  }
-
-  // Move cursor to the end of the prompt
-  p[0].selectionStart = p[0].selectionEnd = p.val().length;
-});
-
 // Tab completion service
-$('#input').keydown(function(event) {
+$('#input').keydown(tab_completion);
+
+// Should be passed as a keydown handler for
+// text inputs requiring text completion.
+function tab_completion() {
   if (event.which != 9 || event.shiftKey) {
     return;
   }
@@ -87,8 +52,8 @@ $('#input').keydown(function(event) {
   // Pull from the prompt the root that should be
   // sent to the server for tab completion. This is
   // the portion of the prompt between the cursor and
-  // the preceding space.  var input = $('#input')[0];
-  var input = $('#input')[0];
+  // the preceding space.
+  var input = this;
   var root = input.value.substring(0, input.selectionStart);
   var start = root.lastIndexOf(' ') + 1;
   root = root.substring(start, root.length);
@@ -113,7 +78,7 @@ $('#input').keydown(function(event) {
       setWorking(false);
     }
   });
-});
+}
 
 // Send the user's command to the server when
 // the form is submitted.
@@ -125,8 +90,6 @@ $('#prompt').submit(function(event) {
   var input = $('#input');
   var cmd = $.trim(input.val());
   if (cmd.length == 0) return;
-
-  updateHistory(cmd);
 
   if (execute_on_client(cmd)) {
     input.val('');
@@ -159,7 +122,7 @@ $('#prompt').submit(function(event) {
 // When the prompt is 'working' it is disabled
 function setWorking(w) {
   working = w;
-  $('#input')[0].disabled = working;
+  $('#input, #output .action form.command input')[0].disabled = working;
   if (working) {
     $('#go').html('<img src="images/loading.gif"/>');
   } else {
@@ -312,4 +275,7 @@ function displayCwd() {
 }
 $(displayCwd);
 $('#cwd').ajaxComplete(displayCwd);
+
+
+
 
