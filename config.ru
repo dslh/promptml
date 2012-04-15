@@ -4,6 +4,7 @@ require 'rack/contrib'
 require 'cgi'
 
 LIB_DIR = "#{File.dirname __FILE__}/lib/promptml"
+require "#{LIB_DIR}/app_path.rb"
 require "#{LIB_DIR}/change_directory.rb"
 require "#{LIB_DIR}/dispatch.rb"
 require "#{LIB_DIR}/list.rb"
@@ -16,9 +17,7 @@ require "#{LIB_DIR}/tab_completion.rb"
 require "#{LIB_DIR}/trollop_action.rb"
 
 CLIENT_SIDE_COMMANDS = ['clear']
-
-PrompTML::Paths.root = '.'
-dispatch = PrompTML::Dispatch.new({
+FIXED_SERVER_COMMANDS = {
   'trollop' => PrompTML::TrollopAction.new do
     opt :flag, 'A flag'
     opt :value, 'A value', :default => 10
@@ -29,7 +28,10 @@ dispatch = PrompTML::Dispatch.new({
   'cd' => PrompTML::ChangeDirectory.new,
   'ls' => PrompTML::List.new,
   'run' => PrompTML::Run.new
-  })
+}
+
+PrompTML::Paths.root = '.'
+dispatch = PrompTML::Dispatch.new(FIXED_SERVER_COMMANDS, PrompTML::AppsAtPath.new('/client/apps'))
 
 builder = Rack::Builder.new do
   use Rack::CommonLogger
@@ -49,9 +51,14 @@ builder = Rack::Builder.new do
 
   map '/tab' do
     run Rack::Cookies.new(
-            PrompTML::TabCompletion.new(
-                    dispatch.commands + CLIENT_SIDE_COMMANDS))
+      PrompTML::TabCompletion.new(
+          FIXED_SERVER_COMMANDS.keys,
+          CLIENT_SIDE_COMMANDS,
+          PrompTML::AppsAtPath.new('/client/apps')
+        ))
   end
 end
 
 run builder
+
+

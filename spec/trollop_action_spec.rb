@@ -3,7 +3,6 @@ require 'promptml/dispatch'
 
 describe PrompTML::TrollopAction do
   before(:each) do
-    @dispatch = PrompTML::Dispatch.new
     @trollop = PrompTML::TrollopAction.new do
       banner "usage message"
 
@@ -11,7 +10,8 @@ describe PrompTML::TrollopAction do
       opt :value, "another", :default => 10
     end
 
-    @dispatch['trollop'] = @trollop
+    @commands = { 'trollop' => @trollop }
+    @dispatch = PrompTML::Dispatch.new(@commands)
   end
 
   it "responds by default with a list of option values" do
@@ -52,7 +52,7 @@ describe PrompTML::TrollopAction do
         end
       end
     end
-    @dispatch['sub'] = TestTrollopSubclass.new
+    @commands['sub'] = TestTrollopSubclass.new
     response = @dispatch.call({'QUERY_STRING' => 'sub+--option'})
     response[0].should == 200
     response[2][0].should match 'on'
@@ -70,10 +70,11 @@ describe PrompTML::TrollopAction do
         cl_error "foobar"
       end
     end
-    @dispatch['clfail'] = TestTrollopFailConvenience.new
+    @commands['clfail'] = TestTrollopFailConvenience.new
     response = @dispatch.call({'QUERY_STRING' => 'clfail'})
     response[2][0].should match 'foobar'
     response[2][0].should match 'Try --help'
   end
 end
+
 

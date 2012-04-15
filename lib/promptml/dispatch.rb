@@ -16,35 +16,28 @@ module PrompTML
   class Dispatch
     attr_accessor :headers
   
-    def initialize cmds = {}
-      @cmds = cmds
+    def initialize *cmd_sources
+      @cmd_sources = cmd_sources
       @headers = { "Content-Type" => "text/html" }
     end
   
-    def []= cmd,action
-      unless action.respond_to? :call
-        raise "Action must implement call method"
-      end
-  
-      @cmds[cmd] = action
-    end
-  
     def [] cmd
-      @cmds[cmd]
-    end
-
-    def commands
-      @cmds.keys
+      @cmd_sources.each do |source|
+        exec = source[cmd]
+        return exec if exec
+      end
+      nil
     end
   
     def call env
       args = parse_args env
       cmd = args[0]
   
-      return not_found cmd unless @cmds.key? cmd
+      exec = self[cmd]
+      return not_found cmd unless exec
   
       begin
-        return command_successful @cmds[cmd].call(env,args)
+        return command_successful exec.call(env,args)
       rescue => e
         return command_failed cmd, e
       end
@@ -93,3 +86,5 @@ EOS
   end
 
 end
+
+

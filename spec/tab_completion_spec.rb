@@ -17,11 +17,6 @@ module PrompTML
       @opts = { 'HTTP_COOKIE' => 'CWD=%2Ffolder' }
     end
 
-    it "should be constructed with a list of commands" do
-      TabCompletion.new ['a','b','c']
-      expect { TabCompletion.new }.to raise_error
-    end
-
     it "should return the command matching the given root" do
       response = @request.get('/tab?cmd&f', @opts)
       response.status.should == 200
@@ -114,3 +109,4 @@ module PrompTML
   end
 
 end
+

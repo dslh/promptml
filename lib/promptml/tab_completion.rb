@@ -20,9 +20,9 @@ module PrompTML
   # * When there are no matches a short informational HTML
   #   message will be produced.
   class TabCompletion
-    def initialize commands
-      raise TypeError unless commands.respond_to? :select
-      @commands = commands
+    
+    def initialize *command_sources
+      @command_sources = command_sources
     end
 
     def call env
@@ -48,7 +48,9 @@ module PrompTML
     end
 
     def matching_commands root
-      @commands.select { |cmd| root? cmd, root }
+      @command_sources.collect do |source|
+        source.select { |cmd| root? cmd, root }
+      end.flatten
     end
 
     def matching_files root, cwd
@@ -100,3 +102,5 @@ EOS
     end
   end
 end
+
+
