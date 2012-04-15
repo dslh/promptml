@@ -17,7 +17,7 @@ require "#{LIB_DIR}/trollop_action.rb"
 
 CLIENT_SIDE_COMMANDS = ['clear']
 
-PrompTML::Paths.root = 'client'
+PrompTML::Paths.root = '.'
 dispatch = PrompTML::Dispatch.new({
   'trollop' => PrompTML::TrollopAction.new do
     opt :flag, 'A flag'
