@@ -135,13 +135,14 @@ function setWorking(w) {
 function appendResult(command,response) {
   var output = $('#output');
   var scroll = $('#output_scroll');
-  output.append(
+  var dom = $(
         '<li class="action"><div class="command">' + command + '</div>' +
         '<div class="response">' + response + '</div></li>'
   );
-  var dom = $('#output>li').last();
+  output.append(dom);
   processMetaTags(dom);
-
+  dom.hide().fadeIn(700);
+  
   if (output.outerHeight() > scroll.innerHeight()) {
     scroll.animate({ scrollTop:
       (output.outerHeight() - scroll.innerHeight() + 32) },
@@ -204,6 +205,7 @@ function makeCodeMirrorEditor(dom,data) {
   }, {
     value: textarea.value,
     mode: data.mode,
+    lineNumbers: true,
     onChange: function(editor,changes) {
       button.text('save');
       button.prop('disabled',null);
@@ -275,6 +277,11 @@ function displayCwd() {
 }
 $(displayCwd);
 $('#cwd').ajaxComplete(displayCwd);
+
+
+
+
+
 
 
 

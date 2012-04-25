@@ -96,7 +96,7 @@ ul#output li.action form.command input {
   border-top-right-radius: 0.5em;
 }
 ul#output li.action div.response {
-  margin: 0.7em 0 0 0.7em;
+  margin: 0.7em 0.4 0 0.7em;
 }
 
 pre {
@@ -146,6 +146,7 @@ div.file_list a.cmd.app {
   border-radius: 0.5em;
   margin-right: 0.3em;
 }
+
 
 
 
