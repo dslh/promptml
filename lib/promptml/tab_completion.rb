@@ -1,6 +1,7 @@
 require 'rack/request'
 require 'rack/response'
 require "#{File.dirname __FILE__}/paths.rb"
+require 'json'
 
 module PrompTML
 
@@ -8,17 +9,17 @@ module PrompTML
   # Expects GET requests of the form:
   #   /path/to/tab/completion?(cmd|file)&<root>
   #
-  # TabCompletion will return four types of result:
+  # TabCompletion will return four types of result, which should
+  # be passed through eval() on the client:
   # * When there is only one match for the given root, it will
-  #   contain only the match, with a trailing space to denote
-  #   that it is an exact match.
-  # * When the root given is ambiguous, it will be an HTML
-  #   list of potential matches.
+  #   contain a string that is the match, with a trailing space
+  #   to denote that it is an exact match.
   # * When the given root is part of a longer root common to
-  #   all matches, it will contain only the longer root with
-  #   no trailing space.
-  # * When there are no matches a short informational HTML
-  #   message will be produced.
+  #   all matches, it will contain a string that is the longer
+  #   root with no trailing space.
+  # * When the root given is ambiguous, it will be an array of
+  #   the potential matches.
+  # * When there are no matches it will be null.
   class TabCompletion
     
     def initialize *command_sources
@@ -39,12 +40,12 @@ module PrompTML
       else
         matching_files root, cwd
       end
-      return not_found root if matches.empty?
+      return not_found if matches.empty?
       return single_match matches[0] if matches.size == 1
 
       common = common_root_of matches
-      return Rack::Response.new common if root != common
-      return match_list type, matches
+      return Rack::Response.new common.to_json if root != common
+      return match_list matches
     end
 
     def matching_commands root
@@ -78,23 +79,15 @@ module PrompTML
 
     def single_match match
       match += ' ' unless match[-1] == '/'
-      Rack::Response.new match
+      Rack::Response.new match.to_json
     end
 
-    def match_list type, matches
-      Rack::Response.new <<-EOS
-<ul class='#{type} matches'>
-  <li>#{matches.sort.join("</li><li>")}</li>
-</ul>
-EOS
+    def match_list matches
+      Rack::Response.new matches.to_json
     end
 
-    def not_found root
-      Rack::Response.new <<-EOS
-<span class='error'>
-  Nothing matches <code>#{root}</code>
-</span>
-EOS
+    def not_found
+      Rack::Response.new nil.to_json
     end
 
     def root? str, root
@@ -102,5 +95,3 @@ EOS
     end
   end
 end
-
-

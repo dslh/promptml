@@ -64,20 +64,50 @@ function tab_completion() {
     type: 'GET', url: '/tab?' + type + '&' + escape(root),
     dataType: 'html',
     success: function (response) {
+      var matches = eval(response);
       var before = input.value.substring(0, start);
       var after = input.value.substring(input.selectionEnd,
                                         input.value.length);
-      if (response.match(/<.*>/)) {
-        appendResult(before + '<b>' + root + '</b>' + after, response);
+      if (matches === null ||
+          matches.constructor.name === "Array") {
+        affix_tab_completion_matches(input, root, type, matches);
       } else {
-        input.value = before + response + after;
-        input.selectionStart = input.selectionEnd = before.length + response.length;
+        input.value = before + matches + after;
+        input.selectionStart = input.selectionEnd = before.length + matches.length;
       }
     },
     complete: function (request, message) {
       setWorking(false);
     }
   });
+}
+
+// Adds a popup to a text box displaying a list of
+// autocomplete options, after the user has hit the tab
+// key.
+function affix_tab_completion_matches(input, root, type, matches) {
+  input = $(input);
+  var html;
+  if (matches === null) {
+    html = 'No ' + (type === 'cmd' ? 'commands' : 'files') +
+      ' match <b>' + root + '</b>.';
+  } else {
+    html = matches.join('<br/>');
+  }
+  
+  var dom = $('<div style="position:absolute">' + html + '</div>');
+  var container = input.offsetParent();
+  container.append(dom);
+  dom.css({
+    'left' : '10px',
+    'top' : (input.position().top - dom.height() - input.height()) + 'px'
+  });
+  var remove = function() {
+    dom.detach();
+    input.off('.tab_completion');
+  };
+  input.on('blur.tab_completion', remove)
+       .on('keydown.tab_completion', remove);
 }
 
 // Send the user's command to the server when
@@ -277,12 +307,4 @@ function displayCwd() {
 }
 $(displayCwd);
 $('#cwd').ajaxComplete(displayCwd);
-
-
-
-
-
-
-
-
 
