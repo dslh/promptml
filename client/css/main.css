@@ -35,6 +35,8 @@ a.cmd {
   height: 30px;
   width: 90%;
   margin: 0;
+}
+#input, .command input[type=text] {
   font-family: inconsolata, courier, monospace;
 }
 #go {
@@ -147,8 +149,10 @@ div.file_list a.cmd.app {
   margin-right: 0.3em;
 }
 
-
-
-
-
-
+.tab_completion_options {
+  background-color: white;
+  background-color: rgba(255,255,255,0.8);
+  border: solid 1px #BED2D9;
+  position: absolute;
+  padding: 5px;
+}

@@ -95,12 +95,17 @@ function affix_tab_completion_matches(input, root, type, matches) {
     html = matches.join('<br/>');
   }
   
-  var dom = $('<div style="position:absolute">' + html + '</div>');
+  var dom = $('<div class="tab_completion_options">' + html + '</div>');
   var container = input.offsetParent();
   container.append(dom);
+  var top;
+  if (dom.height() > container.offset().top + input.position().top)
+    top = input.position().top + input.height() + 10;
+  else
+    top = input.position().top - dom.height() - 10;
   dom.css({
-    'left' : '10px',
-    'top' : (input.position().top - dom.height() - input.height()) + 'px'
+    'left' : (input.position().left + 10) + 'px',
+    'top' : top + 'px'
   });
   var remove = function() {
     dom.detach();
@@ -307,4 +312,3 @@ function displayCwd() {
 }
 $(displayCwd);
 $('#cwd').ajaxComplete(displayCwd);
-
