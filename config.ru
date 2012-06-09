@@ -34,7 +34,6 @@ PrompTML::Paths.root = '.'
 dispatch = PrompTML::Dispatch.new(FIXED_SERVER_COMMANDS, PrompTML::AppsAtPath.new('/client/apps'))
 
 builder = Rack::Builder.new do
-  use Rack::CommonLogger
   use Rack::Logger
 
   map '/client' do
