@@ -19,8 +19,6 @@ module PrompTML
       # 'Run' an erb template app.
       def run args, env
         cwd = Paths.cwd env
-        puts args.inspect
-        puts cwd.inspect
         app = Paths.real_path args[0], cwd
         return error "No such file '#{args[0]}'" unless File.exist? app
         return error "Can only run .app and .erb files" unless Paths.executable? app
