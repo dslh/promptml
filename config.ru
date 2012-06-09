@@ -16,7 +16,7 @@ require "#{LIB_DIR}/sleep.rb"
 require "#{LIB_DIR}/tab_completion.rb"
 require "#{LIB_DIR}/trollop_action.rb"
 
-CLIENT_SIDE_COMMANDS = ['clear']
+CLIENT_SIDE_COMMANDS = ['clear','title']
 FIXED_SERVER_COMMANDS = {
   'trollop' => PrompTML::TrollopAction.new do
     opt :flag, 'A flag'
