@@ -57,7 +57,7 @@ module PrompTML
     def matching_files root, cwd
       root = './' if root.empty?
       absolute = Paths.absolute? root
-      post_slash = root[-1] == '/'
+      post_slash = root[-1..-1] == '/'
       root = Paths.make_absolute root, cwd unless absolute
       root = root.chomp('/') + '/' if post_slash
       root = root + '*' unless root[-1] == '*'
@@ -78,7 +78,7 @@ module PrompTML
     end
 
     def single_match match
-      match += ' ' unless match[-1] == '/'
+      match += ' ' unless match[-1..-1] == '/' and !Paths[match + '*'].empty?
       Rack::Response.new match.to_json
     end
 

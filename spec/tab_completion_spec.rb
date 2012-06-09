@@ -74,12 +74,17 @@ module PrompTML
     end
 
     it "should match directories with a trailing slash" do
-      response = @request.get('/tab?file&s', @opts)
-      response.body.should == '"subfolder/"'
+      response = @request.get('/tab?file&/fol', @opts)
+      response.body.should == '"/folder/"'
 
       response = @request.get('/tab?file&/f', @opts)
       response.body.should match '/folder/'
       response.body.should match '/file_1.txt'
+    end
+    
+    it "should match empty directories with trailing slash and space" do
+      response = @request.get('/tab?file&s', @opts)
+      response.body.should == '"subfolder/ "'
     end
 
     it "should list whole directories" do
